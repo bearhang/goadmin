@@ -13,16 +13,16 @@ type test1 struct {
 	String string `usage:"string usage"`
 }
 
-func test1Handler(input interface{}) string {
+func test1Handler(input interface{}) (string, error) {
 	in := input.(*test1)
-	return fmt.Sprint(in)
+	return fmt.Sprint(in), nil
 }
 
 func TestExample(t *testing.T) {
 	//addr := "127.0.0.1:9204"
 	go goadmin.StartServer("127.0.0.1:9204")
 
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 	err := goadmin.Register("test1", test1Handler, test1{}, "test1 desc")
 	if err != nil {
 		t.Fatal(err)
