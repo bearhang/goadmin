@@ -5,6 +5,9 @@ import (
 	"net/rpc"
 )
 
+// StartClient start the client
+// addr is IP/Port address of server
+// args is command line
 func StartClient(addr string, args []string) {
 	client, err := rpc.DialHTTP("tcp", addr)
 	if err != nil {
@@ -12,13 +15,13 @@ func StartClient(addr string, args []string) {
 	}
 
 	req := AdminReq{
-		args: args,
+		Args: args,
 	}
 	rsp := AdminRsp{}
-	err = client.Call("Admin/Qeury", req, &rsp)
+	err = client.Call("Admin.Query", &req, &rsp)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Print(rsp.result)
+	log.Print(rsp.Result)
 }

@@ -2,29 +2,33 @@ package goadmin
 
 import "fmt"
 
+// AdminReq admin require struct
 type AdminReq struct {
-	args []string
+	Args []string
 }
 
+// AdminRsp admin response struct
 type AdminRsp struct {
-	result string
+	Result string
 }
 
+// Admin admin service
 type Admin int
 
+// Query admin service's handler'
 func (a *Admin) Query(req *AdminReq, rsp *AdminRsp) error {
-	if len(req.args) == 0 {
-		rsp.result = showCommands()
+	if len(req.Args) == 0 {
+		rsp.Result = showCommands()
 		return nil
 	}
 
-	cmd, err := getCommand(req.args[0])
+	cmd, err := getCommand(req.Args[0])
 	if err != nil {
-		rsp.result = fmt.Sprintln(err)
-		rsp.result += showCommands()
+		rsp.Result = fmt.Sprintln(err)
+		rsp.Result += "\n" + showCommands()
 		return nil
 	}
 
-	rsp.result = cmd.excute(req.args[1:])
+	rsp.Result = cmd.excute(req.Args[1:])
 	return nil
 }

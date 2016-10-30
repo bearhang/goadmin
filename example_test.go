@@ -3,6 +3,7 @@ package goadmin_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/bearhang/goadmin"
 )
@@ -19,8 +20,9 @@ func test1Handler(input interface{}) string {
 
 func TestExample(t *testing.T) {
 	//addr := "127.0.0.1:9204"
-	go goadmin.StartServer(":9204")
+	go goadmin.StartServer("127.0.0.1:9204")
 
+	time.Sleep(10 * time.Second)
 	err := goadmin.Register("test1", test1Handler, test1{}, "test1 desc")
 	if err != nil {
 		t.Fatal(err)

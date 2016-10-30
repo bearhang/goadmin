@@ -88,6 +88,8 @@ func (cmd *command) description() string {
 	return ""
 }
 
+// Register register command
+// command should be registered at server end
 func Register(name string, handler func(input interface{}) string,
 	input interface{}, desc string) error {
 	if _, ok := commandMap[name]; ok {
@@ -105,6 +107,7 @@ func Register(name string, handler func(input interface{}) string,
 	return nil
 }
 
+// Unregister unregiseter command
 func Unregister(name string) {
 	delete(commandMap, name)
 }
