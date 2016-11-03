@@ -23,7 +23,7 @@ func TestExample(t *testing.T) {
 	go goadmin.StartServer("127.0.0.1:9204")
 
 	time.Sleep(5 * time.Second)
-	err := goadmin.Register("test1", test1Handler, test1{}, "test1 desc")
+	err := goadmin.Register("test1", "test1 desc", test1{}, test1Handler)
 	if err != nil {
 		t.Fatal(err)
 	}

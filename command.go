@@ -151,8 +151,8 @@ func validArgument(arg *argument) error {
 
 // Register register command
 // command should be registered at server end
-func Register(name string, handler func(input interface{}) (string, error),
-	input interface{}, desc string) error {
+func Register(name string, desc string, input interface{},
+	handler func(input interface{}) (string, error)) error {
 	if _, ok := commandMap[name]; ok {
 		return fmt.Errorf("command %s had been registered", name)
 	}
