@@ -26,6 +26,53 @@ type command struct {
 
 var commandMap = make(map[string]command)
 
+func (cmd *command) excute(args []string) string {
+	fs := flag.NewFlagSet(cmd.name, flag.ContinueOnError)
+	argsPtr := make(map[string]interface{})
+	inputValue := reflect.New(cmd.inputType)
+
+	for name, arg := range cmd.args {
+		argsPtr[name] = setFlag(fs, &arg)
+	}
+
+	if err := fs.Parse(args); err != nil {
+		return err.Error()
+	}
+
+	for name, ptr := range argsPtr {
+		field := inputValue.Elem().FieldByName(name)
+		field.Set(reflect.ValueOf(ptr).Elem().Convert(field.Type()))
+	}
+
+	ret, err := cmd.handler(inputValue.Interface())
+	if err != nil {
+		ret = fmt.Sprintln(err)
+		ret += "SYNOPSIS\n"
+		ret += cmd.synopsis()
+		ret += "\nDESCRIPTION\n"
+		ret += cmd.description()
+	}
+	return ret
+}
+
+func (cmd *command) synopsis() string {
+	var buf string
+	buf += fmt.Sprintf("\t%s\t%s\n", cmd.name, cmd.desc)
+	return buf
+}
+
+func (cmd *command) description() string {
+	var buf string
+	for _, arg := range cmd.args {
+		buf += fmt.Sprintf("\t-%s", arg.name)
+		if arg.acronym != "" {
+			buf += fmt.Sprintf("|-%s", arg.acronym)
+		}
+		buf += fmt.Sprintf("\t%s\n", arg.usage)
+	}
+	return buf
+}
+
 func getCommand(name string) (*command, error) {
 	cmd, ok := commandMap[name]
 	if !ok {
@@ -89,53 +136,6 @@ func setFlag(fs *flag.FlagSet, arg *argument) interface{} {
 	}
 }
 
-func (cmd *command) excute(args []string) string {
-	fs := flag.NewFlagSet(cmd.name, flag.ContinueOnError)
-	argsPtr := make(map[string]interface{})
-	inputValue := reflect.New(cmd.inputType)
-
-	for name, arg := range cmd.args {
-		argsPtr[name] = setFlag(fs, &arg)
-	}
-
-	if err := fs.Parse(args); err != nil {
-		return err.Error()
-	}
-
-	for name, ptr := range argsPtr {
-		field := inputValue.Elem().FieldByName(name)
-		field.Set(reflect.ValueOf(ptr).Elem().Convert(field.Type()))
-	}
-
-	ret, err := cmd.handler(inputValue.Interface())
-	if err != nil {
-		ret = fmt.Sprintln(err)
-		ret += "SYNOPSIS\n"
-		ret += cmd.synopsis()
-		ret += "\nDESCRIPTION\n"
-		ret += cmd.description()
-	}
-	return ret
-}
-
-func (cmd *command) synopsis() string {
-	var buf string
-	buf += fmt.Sprintf("\t%s\t%s\n", cmd.name, cmd.desc)
-	return buf
-}
-
-func (cmd *command) description() string {
-	var buf string
-	for _, arg := range cmd.args {
-		buf += fmt.Sprintf("\t-%s", arg.name)
-		if arg.acronym != "" {
-			buf += fmt.Sprintf("|-%s", arg.acronym)
-		}
-		buf += fmt.Sprintf("\t%s\n", arg.usage)
-	}
-	return buf
-}
-
 func validArgument(arg *argument) error {
 	switch arg.argKind {
 	case reflect.Bool:
@@ -169,7 +169,7 @@ func Register(name string, handler func(input interface{}) (string, error),
 		inputValue = inputValue.Elem()
 	}
 	if cmd.inputType.Kind() != reflect.Struct {
-		errors.New("type of struct should be struct or pointer to struct")
+		return errors.New("type of struct should be struct or pointer to struct")
 	}
 
 	for i := 0; i < cmd.inputType.NumField(); i++ {

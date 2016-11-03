@@ -25,7 +25,7 @@ func (a *Admin) Query(req *AdminReq, rsp *AdminRsp) error {
 	cmd, err := getCommand(req.Args[0])
 	if err != nil {
 		rsp.Result = fmt.Sprintln(err)
-		rsp.Result += "\n" + showCommands()
+		rsp.Result += showCommands()
 		return nil
 	}
 

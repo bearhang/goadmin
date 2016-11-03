@@ -14,12 +14,11 @@ func StartClient(addr string, args []string) {
 		log.Fatal(err)
 	}
 
-	req := AdminReq{
+	req := &AdminReq{
 		Args: args,
 	}
-	rsp := AdminRsp{}
-	err = client.Call("Admin.Query", &req, &rsp)
-	if err != nil {
+	rsp := &AdminRsp{}
+	if err := client.Call("Admin.Query", req, rsp); err != nil {
 		log.Fatal(err)
 	}
 

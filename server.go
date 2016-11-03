@@ -9,9 +9,7 @@ import (
 
 //StartServer start the admin server which will block the goroutine
 func StartServer(addr string) {
-	admin := new(Admin)
-	err := rpc.Register(admin)
-	if err != nil {
+	if err := rpc.Register(new(Admin)); err != nil {
 		log.Fatal(err)
 	}
 	rpc.HandleHTTP()
@@ -20,8 +18,7 @@ func StartServer(addr string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = http.Serve(listen, nil)
-	if err != nil {
+	if err := http.Serve(listen, nil); err != nil {
 		log.Fatal(err)
 	}
 }
