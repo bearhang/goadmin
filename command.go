@@ -30,13 +30,20 @@ func (cmd *command) excute(args []string) string {
 	fs := flag.NewFlagSet(cmd.name, flag.ContinueOnError)
 	argsPtr := make(map[string]interface{})
 	inputValue := reflect.New(cmd.inputType)
+	usageCalled := false
+
+	fs.Usage = func() {
+		usageCalled = true
+	}
 
 	for name, arg := range cmd.args {
 		argsPtr[name] = setFlag(fs, &arg)
 	}
 
 	if err := fs.Parse(args); err != nil {
-		return err.Error()
+		result := fmt.Sprintln(err)
+		result += cmd.usage()
+		return result
 	}
 
 	for name, ptr := range argsPtr {
@@ -44,15 +51,20 @@ func (cmd *command) excute(args []string) string {
 		field.Set(reflect.ValueOf(ptr).Elem().Convert(field.Type()))
 	}
 
-	ret, err := cmd.handler(inputValue.Interface())
+	result, err := cmd.handler(inputValue.Interface())
 	if err != nil {
-		ret = fmt.Sprintln(err)
-		ret += "SYNOPSIS\n"
-		ret += cmd.synopsis()
-		ret += "\nDESCRIPTION\n"
-		ret += cmd.description()
+		result = fmt.Sprintln(err)
+		result += cmd.usage()
 	}
-	return ret
+	return result
+}
+
+func (cmd *command) usage() string {
+	usage := "SYNOPSIS\n"
+	usage += cmd.synopsis()
+	usage += "\nDESCRIPTION\n"
+	usage += cmd.description()
+	return usage
 }
 
 func (cmd *command) synopsis() string {
@@ -64,11 +76,11 @@ func (cmd *command) synopsis() string {
 func (cmd *command) description() string {
 	var buf string
 	for _, arg := range cmd.args {
-		buf += fmt.Sprintf("\t-%s", arg.name)
+		buf += fmt.Sprintf("\t-%s", strings.ToLower(arg.name))
 		if arg.acronym != "" {
 			buf += fmt.Sprintf("|-%s", arg.acronym)
 		}
-		buf += fmt.Sprintf("\t%s\n", arg.usage)
+		buf += fmt.Sprintf("\t(default:%v)\t%s\n", arg.argValue.Interface(), arg.usage)
 	}
 	return buf
 }

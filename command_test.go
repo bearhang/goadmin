@@ -38,14 +38,14 @@ func TestParseBool(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestParseInt(t *testing.T) {
@@ -71,14 +71,14 @@ func TestParseInt(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestParseUint(t *testing.T) {
@@ -104,14 +104,14 @@ func TestParseUint(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestParseFloat(t *testing.T) {
@@ -131,14 +131,14 @@ func TestParseFloat(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestParseString(t *testing.T) {
@@ -156,14 +156,14 @@ func TestParseString(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestRawArgs(t *testing.T) {
@@ -181,14 +181,14 @@ func TestRawArgs(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestLowerArgs(t *testing.T) {
@@ -206,14 +206,14 @@ func TestLowerArgs(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
 
 func TestAcronymArgs(t *testing.T) {
@@ -231,12 +231,12 @@ func TestAcronymArgs(t *testing.T) {
 		if *inputStruct != *expectStruct {
 			t.Errorf("case=%s expect=%v result=%v", name, expectStruct, inputStruct)
 		}
-		return "", nil
+		return fmt.Sprintf("%#v", inputStruct), nil
 	})
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer Unregister(name)
 
-	executeCommand(strings.Split(args, " "))
+	t.Log(executeCommand(strings.Split(args, " ")))
 }
